@@ -36,30 +36,31 @@ function initSocketServer(httpServer) {
 
         socket.on('ai-message', async (messagePayload) => {
 
-            const message = await messageModel.create({
-                user: socket.user._id,
-                chat: messagePayload.chat,
-                content: messagePayload.content,
-                role: 'user'
-            })
+            /* 
+                const message = await messageModel.create({
+                    user: socket.user._id,
+                    chat: messagePayload.chat,
+                    content: messagePayload.content,
+                    role: 'user'
+                })
 
-            // Fetch the chathistory
-            /*
-                const chatHistory = await messageModel.find({
-                    chat: messagePayload.chat
-                }) 
+                const vector = await aiService.generateVector(messagePayload.content)
             */
 
-            const vector = await aiService.generateVector(messagePayload.chat)
+            const [message, vector] = await Promise.all([
+                // Create message in messageModel - user
+                messageModel.create({
+                    user: socket.user._id,
+                    chat: messagePayload.chat,
+                    content: messagePayload.content,
+                    role: 'user'
+                }),
 
-            const memory = await queryMemory({
-                queryVector: vector,
-                limit: 3,
-                metadata: {
-                    user: socket.user._id
-                }
-            })
+                // Generate vector of user entered content
+                aiService.generateVector(messagePayload.content)
+            ])
 
+            // Create the memory in Pinecode - vector DB
             await createMemory({
                 vectors: vector,
                 metadata: {
@@ -70,10 +71,43 @@ function initSocketServer(httpServer) {
                 messageId: message._id
             })
 
-            // How many messages does AI recognize - here last 20 messages
-            const chatHistory = (await messageModel.find({
+            // Fetch the chathistory
+            /*
+            const chatHistory = await messageModel.find({
                 chat: messagePayload.chat
-            }).sort({ createdAt: -1 }).limit(20).lean()).reverse();
+                }) 
+                */
+
+            /**
+                const memory = await queryMemory({
+                    queryVector: vector,
+                    limit: 3,
+                    metadata: {
+                        user: socket.user._id
+                    }
+                })
+
+                // How many messages does AI recognize - here last 20 messages
+                const chatHistory = (await messageModel.find({
+                    chat: messagePayload.chat
+                }).sort({ createdAt: -1 }).limit(20).lean()).reverse();
+            */
+
+            const [memory, chatHistory] = await Promise.all([
+                // Query into Pinecode memory - Look for the older chat is present on current chat or not.
+                queryMemory({
+                    queryVector: vector,
+                    limit: 3,
+                    metadata: {
+                        user: socket.user._id
+                    }
+                }),
+
+                // Fetch the last chat history
+                messageModel.find({
+                    chat: messagePayload.chat
+                }).sort({ createdAt: -1 }).limit(20).lean().then(messages => messages.reverse())
+            ])
 
             const stm = chatHistory.map(item => {
                 return {
@@ -93,20 +127,36 @@ function initSocketServer(httpServer) {
                 }
             ]
 
-            console.log(ltm[0]);
-            console.log(stm);
-
-
             const response = await aiService.generateResponse([...ltm, ...stm])
 
-            const responseMessage = await messageModel.create({
-                user: socket.user._id,
-                chat: messagePayload.chat,
+            socket.emit('ai-response', {
                 content: response,
-                role: "model"
+                chat: messagePayload.chat
             })
 
-            const responseVector = await aiService.generateVector(response)
+            /*
+                const responseMessage = await messageModel.create({
+                    user: socket.user._id,
+                    chat: messagePayload.chat,
+                    content: response,
+                    role: "model"
+                })
+
+                const responseVector = await aiService.generateVector(response)
+            */
+
+            const [responseMessage, responseVector] = await Promise.all([
+                // Create message in messageModel - model
+                messageModel.create({
+                    user: socket.user._id,
+                    chat: messagePayload.chat,
+                    content: response,
+                    role: "model"
+                }),
+
+                // Generate the vector for AI response
+                aiService.generateVector(response)
+            ])
 
             await createMemory({
                 vectors: responseVector,
@@ -116,11 +166,6 @@ function initSocketServer(httpServer) {
                     text: response
                 },
                 messageId: responseMessage._id
-            })
-
-            socket.emit('ai-response', {
-                content: response,
-                chat: messagePayload.chat
             })
         })
     })
