@@ -1,0 +1,25 @@
+:root {
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --background-light: #ffffff;
+  --background-dark: #1e1e1e;
+  --text-light: #1f2937;
+  --text-dark: #f3f4f6;
+  --border-color: #d1d5db;
+  --error-color: #ef4444;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-light: var(--background-dark);
+    --text-light: var(--text-dark);
+  }
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background-color: var(--background-light);
+  color: var(--text-light);
+  transition: all 0.3s ease;
+}
