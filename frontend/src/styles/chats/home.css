@@ -1,0 +1,23 @@
+.home-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Mobile hamburger visibility */
+.hamburger {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+}
