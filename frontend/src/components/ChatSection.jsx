@@ -11,6 +11,7 @@ import "../styles/chats/input.css";
 const ChatSection = ({ chats, setChats, activeChat }) => {
   const [message, setMessage] = useState("");
   const messagesEndRef = useRef(null);
+  const textareaRef = useRef(null);
 
   const handleSend = () => {
     if (!message.trim() || !activeChat) return;
@@ -89,8 +90,18 @@ const ChatSection = ({ chats, setChats, activeChat }) => {
       <div className="messages">
         {currentChat?.messages.length === 0 ? (
           <div className="empty-chat">
-            <h2>Start a new conversation</h2>
-            <p>Your messages will appear here.</p>
+            <h1 className="welcome-title">ChatGPT Clone</h1>
+            <p className="welcome-subtitle">
+              Your AI assistant is ready to help you.
+            </p>
+
+            <div className="welcome-examples">
+              <div className="example">
+                💡 Explain a complex topic in simple words
+              </div>
+              <div className="example">📄 Generate a professional email</div>
+              <div className="example">💻 Help me debug a piece of code</div>
+            </div>
           </div>
         ) : (
           currentChat?.messages.map((msg, idx) => (
@@ -145,18 +156,30 @@ const ChatSection = ({ chats, setChats, activeChat }) => {
       </div>
 
       {/* Input */}
-      <div className="input-container">
-        <textarea
-          rows={1}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Message ChatGPT..."
-          className="chat-input"
-        />
-        <button className="send-btn" onClick={handleSend}>
-          ➤
-        </button>
+      <div className="chatgpt-input-container">
+        <div className="chatgpt-input-box">
+          <textarea
+            ref={textareaRef}
+            rows={1}
+            value={message}
+            onChange={(e) => {
+              setMessage(e.target.value);
+              e.target.style.height = "auto"; // reset
+              e.target.style.height =
+                Math.min(e.target.scrollHeight, 150) + "px"; // expand until 150px
+            }}
+            onKeyDown={handleKeyDown}
+            placeholder="Message ChatGPT..."
+            className="chatgpt-input"
+          />
+
+          <button className="chatgpt-send-btn" onClick={handleSend}>
+            ➤
+          </button>
+        </div>
+        <p className="chatgpt-input-hint">
+          ChatGPT can make mistakes. Consider checking important information.
+        </p>
       </div>
     </div>
   );

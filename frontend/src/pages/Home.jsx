@@ -8,17 +8,7 @@ const Home = () => {
   const [activeChat, setActiveChat] = useState(null);
 
   // Default chat
-  useEffect(() => {
-    if (chats.length === 0) {
-      const defaultChat = {
-        id: Date.now(),
-        title: "Welcome Chat",
-        messages: [],
-      };
-      setChats([defaultChat]);
-      setActiveChat(defaultChat.id);
-    }
-  }, []);
+  useEffect(() => {}, []);
 
   // Now accepts title from Sidebar
   const handleNewChat = (title) => {
@@ -39,7 +29,29 @@ const Home = () => {
         setActiveChat={setActiveChat}
         handleNewChat={handleNewChat}
       />
-      <ChatSection chats={chats} setChats={setChats} activeChat={activeChat} />
+
+      {chats.length === 0 ? (
+        <div className="empty-chat">
+          <h1 className="welcome-title">ChatGPT Clone</h1>
+          <p className="welcome-subtitle">
+            Your AI assistant is ready to help you.
+          </p>
+
+          <div className="welcome-examples">
+            <div className="example">
+              💡 Explain a complex topic in simple words
+            </div>
+            <div className="example">📄 Generate a professional email</div>
+            <div className="example">💻 Help me debug a piece of code</div>
+          </div>
+        </div>
+      ) : (
+        <ChatSection
+          chats={chats}
+          setChats={setChats}
+          activeChat={activeChat}
+        />
+      )}
     </div>
   );
 };

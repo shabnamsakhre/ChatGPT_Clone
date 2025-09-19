@@ -54,18 +54,28 @@ const Sidebar = ({ chats, activeChat, setActiveChat, handleNewChat }) => {
 
         <div className="sidebar-chats">
           <h4>Chats</h4>
-          {chats.map((chat) => (
-            <div
-              key={chat.id}
-              className={`chat-item ${activeChat === chat.id ? "active" : ""}`}
-              onClick={() => {
-                setActiveChat(chat.id);
-                setIsOpen(false); // close sidebar after selection
-              }}
-            >
-              {chat.title}
+          {chats.length === 0 ? (
+            <div>
+              <p className="welcome-subtitle">No chats yet.</p>
             </div>
-          ))}
+          ) : (
+            chats.map((chat) => (
+              <div
+                key={chat.id}
+                className={`chat-item ${
+                  activeChat === chat.id ? "active" : ""
+                }`}
+                onClick={() => {
+                  setActiveChat(chat.id);
+                  setIsOpen(false); // close sidebar after selection
+                }}
+              >
+                {chat.title.length > 30
+                  ? chat.title.slice(0, 30) + "..."
+                  : chat.title}
+              </div>
+            ))
+          )}
         </div>
 
         <div className="sidebar-footer">
