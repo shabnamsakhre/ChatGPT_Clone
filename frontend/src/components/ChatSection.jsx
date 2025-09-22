@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+// import rehypeHighlight from "rehype-highlight";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import "../styles/chats/chatSection.css";
@@ -152,11 +152,16 @@ const ChatSection = ({ chats, setChats, activeChat, getMessages }) => {
                 <div className="message-wrapper bot">
                   <div className="message bot-message">
                     <span className="message-text">
-                      {/* <ReactMarkdown
+                      <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
-                        rehypePlugins={[rehypeHighlight]}
                         components={{
-                          code({ inline, className, children, ...props }) {
+                          code({
+                            node,
+                            inline,
+                            className,
+                            children,
+                            ...props
+                          }) {
                             const match = /language-(\w+)/.exec(
                               className || ""
                             );
@@ -178,8 +183,7 @@ const ChatSection = ({ chats, setChats, activeChat, getMessages }) => {
                         }}
                       >
                         {msg.content}
-                        </ReactMarkdown> */}
-                      {msg.content}
+                      </ReactMarkdown>
                     </span>
                     <span className="message-time">{msg.time}</span>
                   </div>
