@@ -7,62 +7,101 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import "../styles/chats/chatSection.css";
 import "../styles/chats/message.css";
 import "../styles/chats/input.css";
+import { io } from "socket.io-client";
 
-const ChatSection = ({ chats, setChats, activeChat }) => {
+const ChatSection = ({ chats, setChats, activeChat, getMessages }) => {
   const [message, setMessage] = useState("");
+  const [messageBox, setMessageBox] = useState([]);
   const messagesEndRef = useRef(null);
   const textareaRef = useRef(null);
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
+    setMessageBox(
+      getMessages.map((msg) => ({
+        role: msg.role === "user" ? "user" : "ai",
+        content: msg.content,
+      }))
+    );
+
+    const tempSocket = io("http://localhost:3000", { withCredentials: true });
+
+    tempSocket.on("ai-response", (messagePayload) => {
+      console.log("Received - ", messagePayload);
+
+      setMessageBox((prev) => [
+        ...prev,
+        { role: "ai", content: messagePayload.content },
+      ]);
+    });
+
+    setSocket(tempSocket);
+  }, [chats, getMessages]);
 
   const handleSend = () => {
     if (!message.trim() || !activeChat) return;
 
+    console.log("Message = ", message.trim());
+
+    setMessageBox((prev) => [
+      ...prev,
+      { role: "user", content: message.trim() },
+    ]);
+
+    socket.emit("ai-message", {
+      chat: activeChat,
+      content: message.trim(),
+    });
+
     // Add user message
-    setChats((prev) =>
-      prev.map((chat) =>
-        chat.id === activeChat
-          ? {
-              ...chat,
-              messages: [
-                ...chat.messages,
-                { role: "user", content: message, time: getCurrentTime() },
-              ],
-            }
-          : chat
-      )
-    );
+    // setChats((prev) =>
+    //   prev.map((chat) =>
+    //     chat._id === activeChat
+    //       ? {
+    //           ...chat,
+    //           messages: [
+    //             ...chat.messages,
+    //             { role: "user", content: message, time: getCurrentTime() },
+    //           ],
+    //         }
+    //       : chat
+    //   )
+    // );
     setMessage("");
 
     // Simulated AI response
-    setTimeout(() => {
-      const aiResponse = `
-        I understand ✅
+    // setTimeout(() => {
+    //   const aiResponse = `
+    //     I understand ✅
 
-        Here’s an example code:
+    //     Here’s an example code:
 
-        \`\`\`js
-        function greet() {
-          console.log("Hello from AI!");
-        }
-        greet();
-        \`\`\`
+    //     \`\`\`js
+    //     function greet() {
+    //       console.log("Hello from AI!");
+    //     }
+    //     greet();
+    //     \`\`\`
 
-        And some **bold text** + *italic text*.
-      `;
+    //     And some **bold text** + *italic text*.
+    //   `;
 
-      setChats((prev) =>
-        prev.map((chat) =>
-          chat.id === activeChat
-            ? {
-                ...chat,
-                messages: [
-                  ...chat.messages,
-                  { role: "ai", content: aiResponse, time: getCurrentTime() },
-                ],
-              }
-            : chat
-        )
-      );
-    }, 800);
+    //   setChats((prev) =>
+    //     prev.map((chat) =>
+    //       chat.id === activeChat
+    //         ? {
+    //             ...chat,
+    //             messages: [
+    //               ...chat.messages,
+    //               { role: "ai", content: aiResponse, time: getCurrentTime() },
+    //             ],
+    //           }
+    //         : chat
+    //     )
+    //   );
+    // }, 800);
   };
 
   const handleKeyDown = (e) => {
@@ -72,10 +111,6 @@ const ChatSection = ({ chats, setChats, activeChat }) => {
     }
   };
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chats]);
-
   const getCurrentTime = () => {
     return new Date().toLocaleTimeString([], {
       hour: "2-digit",
@@ -83,12 +118,12 @@ const ChatSection = ({ chats, setChats, activeChat }) => {
     });
   };
 
-  const currentChat = chats.find((c) => c.id === activeChat);
+  const currentChat = chats.find((c) => c._id === activeChat);
 
   return (
     <div className="chat-section">
       <div className="messages">
-        {currentChat?.messages.length === 0 ? (
+        {messageBox.length === 0 ? (
           <div className="empty-chat">
             <h1 className="welcome-title">ChatGPT Clone</h1>
             <p className="welcome-subtitle">
@@ -104,7 +139,7 @@ const ChatSection = ({ chats, setChats, activeChat }) => {
             </div>
           </div>
         ) : (
-          currentChat?.messages.map((msg, idx) => (
+          messageBox.map((msg, idx) => (
             <div key={idx} className={`message ${msg.role}`}>
               {msg.role === "user" ? (
                 // ✅ Keep user bubble as-is
@@ -117,7 +152,7 @@ const ChatSection = ({ chats, setChats, activeChat }) => {
                 <div className="message-wrapper bot">
                   <div className="message bot-message">
                     <span className="message-text">
-                      <ReactMarkdown
+                      {/* <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         rehypePlugins={[rehypeHighlight]}
                         components={{
@@ -143,7 +178,8 @@ const ChatSection = ({ chats, setChats, activeChat }) => {
                         }}
                       >
                         {msg.content}
-                      </ReactMarkdown>
+                        </ReactMarkdown> */}
+                      {msg.content}
                     </span>
                     <span className="message-time">{msg.time}</span>
                   </div>

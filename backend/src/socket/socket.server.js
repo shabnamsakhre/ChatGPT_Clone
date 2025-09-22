@@ -8,7 +8,12 @@ const aiService = require('../services/ai.service');
 const { createMemory, queryMemory } = require('../services/vector.service');
 
 function initSocketServer(httpServer) {
-    const io = new Server(httpServer, {});
+    const io = new Server(httpServer, {
+        cors: {
+            origin: 'http://localhost:5173',
+            credentials: true
+        }
+    });
 
     // Socket Middleware
     io.use(async (socket, next) => {
@@ -31,9 +36,6 @@ function initSocketServer(httpServer) {
     })
 
     io.on('connection', (socket) => {
-        console.log("Connected User: ", socket.user);
-        console.log("New socker connection: ", socket.id);
-
         socket.on('ai-message', async (messagePayload) => {
 
             /* 

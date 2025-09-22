@@ -19,6 +19,7 @@
   border-bottom-right-radius: 2px;
 }
 
+/* Code Snippet style start here */
 .code-block {
   position: relative;
   margin-top: 0.5rem;
@@ -42,12 +43,13 @@
 .copy-btn:hover {
   background: var(--primary-hover);
 }
+/* Code Snippet style ends here */
 
 .message-wrapper.bot {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  max-width: 80%;
 }
 
 .message.bot-message {
