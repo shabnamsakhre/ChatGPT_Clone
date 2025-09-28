@@ -9,7 +9,7 @@
 .messages {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 1rem 8rem;
   display: flex;
   flex-direction: column;
 }

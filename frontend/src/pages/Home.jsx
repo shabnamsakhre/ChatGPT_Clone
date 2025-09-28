@@ -7,26 +7,33 @@
 // const Home = () => {
 //   const [chats, setChats] = useState([]);
 //   const [activeChat, setActiveChat] = useState(null);
+//   const [msg, setMsg] = useState([]);
 
 //   // Default chat
 //   useEffect(() => {
 //     axios
 //       .get("http://localhost:3000/api/chat", { withCredentials: true })
 //       .then((response) => {
-//         console.log("chats -", response.data.chats);
-//         setChats(response.data.chats);
+//         setChats(response.data.chats.reverse());
+//         setActiveChat(response.data.chats[0]._id);
 //       });
 //   }, []);
 
 //   // Now accepts title from Sidebar
-//   const handleNewChat = (title) => {
-//     const newChat = {
-//       id: Date.now(),
-//       title: title || "New Chat",
-//       messages: [],
-//     };
-//     setChats([newChat, ...chats]);
-//     setActiveChat(newChat.id);
+//   const handleNewChat = (newChat) => {
+//     setChats([newChat.chat, ...chats]);
+//     setActiveChat(newChat.chat._id);
+
+//     getMessages(newChat.chat._id);
+//   };
+
+//   const getMessages = async (chatId) => {
+//     const response = await axios.get(
+//       `http://localhost:3000/api/chat/messages/${chatId}`,
+//       { withCredentials: true }
+//     );
+
+//     setMsg(response.data.messages);
 //   };
 
 //   return (
@@ -36,6 +43,7 @@
 //         activeChat={activeChat}
 //         setActiveChat={setActiveChat}
 //         handleNewChat={handleNewChat}
+//         getMessages={getMessages}
 //       />
 
 //       {chats.length === 0 ? (
@@ -58,6 +66,7 @@
 //           chats={chats}
 //           setChats={setChats}
 //           activeChat={activeChat}
+//           getMessages={msg}
 //         />
 //       )}
 //     </div>
@@ -75,7 +84,7 @@ import axios from "axios";
 const Home = () => {
   const [chats, setChats] = useState([]);
   const [activeChat, setActiveChat] = useState(null);
-  const [msg, setMsg] = useState([]);
+  const [messageBox, setMessageBox] = useState([]);
 
   // Default chat
   useEffect(() => {
@@ -83,7 +92,6 @@ const Home = () => {
       .get("http://localhost:3000/api/chat", { withCredentials: true })
       .then((response) => {
         setChats(response.data.chats.reverse());
-        setActiveChat(response.data.chats[0]._id);
       });
   }, []);
 
@@ -101,7 +109,25 @@ const Home = () => {
       { withCredentials: true }
     );
 
-    setMsg(response.data.messages);
+    setMessageBox(
+      response.data.messages.map((msg) => ({
+        role: msg.role === "user" ? "user" : "ai",
+        content: msg.content,
+        time: new Date(msg.createdAt).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+
+        // time: `${new Date(msg.createdAt).toLocaleTimeString([], {
+        //   hour: "2-digit",
+        //   minute: "2-digit",
+        // })} - ${new Date(msg.createdAt).toLocaleDateString("en-GB", {
+        //   day: "2-digit",
+        //   month: "short",
+        //   year: "2-digit",
+        // })}`,
+      }))
+    );
   };
 
   return (
@@ -134,7 +160,8 @@ const Home = () => {
           chats={chats}
           setChats={setChats}
           activeChat={activeChat}
-          getMessages={msg}
+          messageBox={messageBox}
+          setMessageBox={setMessageBox}
         />
       )}
     </div>

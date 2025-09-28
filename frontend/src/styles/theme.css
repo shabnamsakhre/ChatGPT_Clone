@@ -24,3 +24,33 @@ body {
   color: var(--text-light);
   transition: all 0.3s ease;
 }
+
+/* Only show scrollbar thumb */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Hide the track (make it transparent) */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Stylish glossy thumb */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(145deg, #1a1a1a, #333);
+  border-radius: 10px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect */
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(145deg, #2a2a2a, #444);
+  transform: scale(1.05);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent; /* thumb color + transparent track */
+}

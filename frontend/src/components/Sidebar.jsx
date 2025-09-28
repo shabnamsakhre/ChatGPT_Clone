@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react"; // icons
 import "../styles/chats/sidebar.css";
+import Cookies from "js-cookie";
 
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = ({
   chats,
@@ -12,6 +14,8 @@ const Sidebar = ({
   getMessages,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [token, setToken] = useState(null);
+  const navigate = useNavigate();
 
   // Ask for chat title when creating new chat
   const createNewChat = async () => {
@@ -31,12 +35,23 @@ const Sidebar = ({
 
   // Close sidebar when pressing ESC
   useEffect(() => {
+    setToken(Cookies.get("token"));
+
     const handleEsc = (e) => {
       if (e.key === "Escape") setIsOpen(false);
     };
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
-  }, []);
+  }, [token]);
+
+  const handleLogout = async () => {
+    console.log("Hello");
+
+    await axios.get("http://localhost:3000/api/auth/logout");
+    Cookies.remove("token");
+    setToken(null);
+    navigate("/login");
+  };
 
   return (
     <>
@@ -57,7 +72,11 @@ const Sidebar = ({
       <aside className={`sidebar ${isOpen ? "open" : ""}`}>
         {/* Close button (visible on mobile when open) */}
         <div className="sidebar-top">
-          <button className="sidebar-btn" onClick={createNewChat}>
+          <button
+            className={`sidebar-btn ${!token ? "disabled" : ""}`}
+            disabled={!token}
+            onClick={createNewChat}
+          >
             ＋ New chat
           </button>
 
@@ -95,13 +114,21 @@ const Sidebar = ({
         </div>
 
         <div className="sidebar-footer">
-          <div className="profile">
-            <span className="avatar">J</span>
-            <span className="name">User</span>
-          </div>
-          <div className="logout">
-            <button>Logout</button>
-          </div>
+          {token ? (
+            <div className="profile-section">
+              <div className="profile">
+                <span className="avatar">J</span>
+                <span className="name">User</span>
+              </div>
+              <div className="logout">
+                <button onClick={handleLogout}>Logout</button>
+              </div>
+            </div>
+          ) : (
+            <div className="login">
+              <button onClick={() => navigate("/login")}>Login</button>
+            </div>
+          )}
         </div>
       </aside>
     </>

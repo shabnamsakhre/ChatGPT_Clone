@@ -25,15 +25,20 @@
   margin-top: 0.3rem;
   display: block;
 }
+.message.bot-message .message-time {
+  text-align: right;
+}
 
 .message-wrapper.bot {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  max-width: 80%;
+  width: 80%;
 }
 
 .message.bot-message {
+  display: flex;
+  flex-direction: column;
   background: hsl(210, 21%, 15%);
   color: #e5e7eb;
   padding: 1rem 1.2rem;
@@ -80,12 +85,14 @@
 .code-block {
   position: relative;
   margin: 1rem 0;
+  padding: 0 0.4rem;
   border: 1px solid #374151;
   border-radius: 6px;
   overflow: hidden;
 }
 
 .copy-btn {
+  margin: 0.5rem;
   position: absolute;
   top: 6px;
   right: 6px;
