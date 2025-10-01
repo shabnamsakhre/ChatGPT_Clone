@@ -8,6 +8,7 @@
   --text-dark: #f3f4f6;
   --border-color: #d1d5db;
   --error-color: #ef4444;
+  --gradient-color: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
 }
 
 @media (prefers-color-scheme: dark) {

@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Sidebar = ({
   chats,
@@ -16,6 +17,7 @@ const Sidebar = ({
   const [isOpen, setIsOpen] = useState(false);
   const [token, setToken] = useState(null);
   const navigate = useNavigate();
+  const [user, setUser] = useState("");
 
   // Ask for chat title when creating new chat
   const createNewChat = async () => {
@@ -28,14 +30,21 @@ const Sidebar = ({
         { withCredentials: true }
       );
 
-      handleNewChat(response.data);
-      setIsOpen(false); // close after creation (mobile UX)
-    }
+      if (response.status === 201) {
+        toast.success(response.data.message + " 🎉", { theme: "dark" });
+
+        handleNewChat(response.data);
+        setIsOpen(false);
+      } else {
+        toast.error("Something went wrong!", { theme: "dark" });
+      }
+    } else toast.warn("Chat title cannot be empty.", { theme: "dark" });
   };
 
   // Close sidebar when pressing ESC
   useEffect(() => {
     setToken(Cookies.get("token"));
+    setUser(JSON.parse(Cookies.get("user")));
 
     const handleEsc = (e) => {
       if (e.key === "Escape") setIsOpen(false);
@@ -47,10 +56,18 @@ const Sidebar = ({
   const handleLogout = async () => {
     console.log("Hello");
 
-    await axios.get("http://localhost:3000/api/auth/logout");
-    Cookies.remove("token");
-    setToken(null);
-    navigate("/login");
+    const response = await axios.get("http://localhost:3000/api/auth/logout");
+
+    if (response.status === 200) {
+      toast.success(response.data.message, { theme: "dark" });
+
+      Cookies.remove("token");
+      Cookies.remove("user");
+      setToken(null);
+      navigate("/login");
+    } else {
+      toast.error("Something went wrong!", { theme: "dark" });
+    }
   };
 
   return (
@@ -73,11 +90,14 @@ const Sidebar = ({
         {/* Close button (visible on mobile when open) */}
         <div className="sidebar-top">
           <button
-            className={`sidebar-btn ${!token ? "disabled" : ""}`}
+            className={`sidebar-btn newChat-button button ${
+              !token ? "disabled" : ""
+            }`}
             disabled={!token}
             onClick={createNewChat}
           >
-            ＋ New chat
+            {/* ＋ New chat */}
+            <span className="text">+ New Chat</span>
           </button>
 
           {/* Close button (mobile only) */}
@@ -117,8 +137,15 @@ const Sidebar = ({
           {token ? (
             <div className="profile-section">
               <div className="profile">
-                <span className="avatar">J</span>
-                <span className="name">User</span>
+                <span className="avatar">
+                  {user.firstName[0].toUpperCase()}
+                </span>
+                {/* <span className="name">{user.firstName}</span> */}
+                <span className="name">
+                  {user.firstName.length > 13
+                    ? user.firstName.slice(0, 13) + "..."
+                    : user.firstName}
+                </span>
               </div>
               <div className="logout">
                 <button onClick={handleLogout}>Logout</button>

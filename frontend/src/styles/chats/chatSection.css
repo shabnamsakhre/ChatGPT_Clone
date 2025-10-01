@@ -56,3 +56,7 @@
 .example:hover {
   background: #3a3b45;
 }
+
+@media (max-width: 768px) {
+  
+}

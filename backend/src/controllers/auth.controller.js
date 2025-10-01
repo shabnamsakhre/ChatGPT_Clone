@@ -71,12 +71,13 @@ async function loginUser(req, res) {
     })
 }
 
+// Logout User
 async function logoutUser(req, res) {
     res.clearCookie('token')
     // return res.redirect('/api/auth/login')
 
     return res.status(200).json({
-        message: "Logged out."
+        message: "Your are Logged out."
     })
 }
 

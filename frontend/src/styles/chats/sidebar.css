@@ -57,9 +57,10 @@
 }
 
 .sidebar-btn {
+  width: 75%;
   background: var(--primary-color);
   color: white;
-  padding: 10px 15px;
+  padding: 1.5px !important;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -103,14 +104,20 @@
 }
 
 .sidebar-footer {
-  background-color: var(--background-gray);
+  /* background-color: var(--background-gray); */
+  background: var(--gradient-color);
   border-top-left-radius: 0.7rem;
   border-top-right-radius: 0.7rem;
+  /* overflow: hidden; */
+  padding: 2px 2px 0 2px;
 }
 
 .profile-section {
-  padding: 1rem;
+  background-color: rgb(5, 6, 45);
+  border-top-left-radius: 0.7rem;
+  border-top-right-radius: 0.7rem;
   display: flex;
+  padding: 0.7rem 1rem;
   justify-content: space-between;
   align-items: center;
 }
@@ -156,7 +163,7 @@
   padding: 0.5rem 1rem;
   border: none;
   color: white;
-  background-color: var(--error-color);
+  background-color: rgba(255, 43, 43, 0.81);
   border-radius: 0.8rem;
   cursor: pointer;
 }

@@ -3,6 +3,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import FormInput from "../components/FormInput";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/auth.css";
+import { toast } from "react-toastify";
 
 const Register = () => {
   const methods = useForm();
@@ -23,10 +24,16 @@ const Register = () => {
         { withCredentials: true }
       )
       .then((res) => {
+        toast.success("User registered successfully! 🎉", { theme: "dark" });
         navigate("/");
         console.log("User created successfully.");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        toast.error("User already exist. Try again with another email.", {
+          theme: "dark",
+        });
+      });
   };
 
   return (
@@ -57,14 +64,15 @@ const Register = () => {
               type="password"
               placeholder="Create a password"
             />
-            <button type="submit" className="btn">
-              Register
+            <button type="submit" className="btn button">
+              {/* Register */}
+              <span className="text">Register</span>
             </button>
           </form>
         </FormProvider>
 
         <p>
-          Already have an account?
+          Already have an account?&nbsp;&nbsp;
           <Link to="/login" className="auth-btn">
             Login
           </Link>

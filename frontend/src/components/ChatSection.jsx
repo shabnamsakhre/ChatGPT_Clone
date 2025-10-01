@@ -178,7 +178,7 @@ const ChatSection = ({ activeChat, messageBox, setMessageBox }) => {
       </div>
 
       {/* Input */}
-      {messageBox.length !== 0 ? (
+      {activeChat !== null ? (
         <div className="chatgpt-input-container">
           <div className="chatgpt-input-box">
             <textarea

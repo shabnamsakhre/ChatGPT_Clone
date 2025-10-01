@@ -6,6 +6,7 @@
 
   /* Background Gradient for Separation */
   background: linear-gradient(135deg, var(--background-light) 0%, #f3f4f6 100%);
+  color: #fff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -26,26 +27,30 @@
   background: #ffffff;
   padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-
   transition: background 0.3s ease, color 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
 }
 
 @media (prefers-color-scheme: dark) {
   .auth-box {
     background: #1f2937; /* dark gray card */
     color: var(--text-dark);
+
+    background: linear-gradient(145deg, #0f0f1a, #1a1a2e);
   }
 }
 
 h2 {
-  margin-bottom: 1rem;
-  color: var(--primary-color);
   text-align: center;
+  background: linear-gradient(90deg, #6a5af9, #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 label {
@@ -60,13 +65,20 @@ input {
   border-radius: 0.5rem;
   outline: none;
   background: #f9fafb;
+
+  transition: box-shadow 0.3s ease, border 0.3s ease;
 }
 
 @media (prefers-color-scheme: dark) {
   input {
     background: #374151;
     color: var(--text-dark);
-    border: 1px solid #4b5563;
+    /* border: 1px solid #4b5563; */
+
+    border: 2px solid transparent; /* transparent border */
+    background: linear-gradient(rgb(5, 6, 45), rgb(5, 6, 45)) padding-box,
+      /* input bg */ var(--gradient-color) border-box; /* border */
+    color: #fff;
   }
 }
 

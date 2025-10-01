@@ -12,7 +12,7 @@ async function createChat(req, res) {
     })
 
     res.status(201).json({
-        message: "Chat is created sucessfully.",
+        message: "New Chat is created sucessfully.",
         chat: {
             _id: chat._id,
             title: chat.title,

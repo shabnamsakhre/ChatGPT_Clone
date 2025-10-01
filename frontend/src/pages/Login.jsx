@@ -2,7 +2,10 @@ import axios from "axios";
 import { useForm, FormProvider } from "react-hook-form";
 import FormInput from "../components/FormInput";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 import "../styles/auth.css";
+import "../styles/button.css";
 
 const Login = () => {
   const methods = useForm();
@@ -20,9 +23,16 @@ const Login = () => {
       )
       .then((res) => {
         console.log("Login successfully. = ", res);
+        toast.success(res.data.message, { theme: "dark" });
+
+        Cookies.set("user", JSON.stringify(res.data.user.fullName));
+
         navigate("/");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        toast.error("Invalid email or password!", { theme: "dark" });
+      });
   };
 
   return (
@@ -43,13 +53,14 @@ const Login = () => {
               type="password"
               placeholder="Enter your password"
             />
-            <button type="submit" className="btn">
-              Login
+            <button type="submit" className="btn button">
+              {/* Login */}
+              <span className="text">Login</span>
             </button>
           </form>
         </FormProvider>
         <p>
-          Don't have an account?{" "}
+          Don't have an account?&nbsp;&nbsp;
           <Link to="/register" className="auth-btn">
             Register
           </Link>

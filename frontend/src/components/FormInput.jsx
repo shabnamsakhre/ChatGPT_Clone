@@ -10,6 +10,7 @@ const FormInput = ({ name, label, type = "text", placeholder }) => {
     <div className="form-group">
       <label>{label}</label>
       <input
+        className="input"
         type={type}
         placeholder={placeholder}
         {...register(name, { required: `${label} is required` })}
