@@ -35,7 +35,6 @@
   .auth-box {
     background: #1f2937; /* dark gray card */
     color: var(--text-dark);
-
     background: linear-gradient(145deg, #0f0f1a, #1a1a2e);
   }
 }
@@ -65,7 +64,6 @@ input {
   border-radius: 0.5rem;
   outline: none;
   background: #f9fafb;
-
   transition: box-shadow 0.3s ease, border 0.3s ease;
 }
 
@@ -73,8 +71,6 @@ input {
   input {
     background: #374151;
     color: var(--text-dark);
-    /* border: 1px solid #4b5563; */
-
     border: 2px solid transparent; /* transparent border */
     background: linear-gradient(rgb(5, 6, 45), rgb(5, 6, 45)) padding-box,
       /* input bg */ var(--gradient-color) border-box; /* border */

@@ -56,7 +56,7 @@
 
 .message-text p {
   text-align: left;
-  margin: 0.6rem 0;
+  margin: 0.1rem 0;
 }
 
 .message-text h1,
@@ -137,5 +137,17 @@
   }
   40% {
     opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .bubble {
+    max-width: 90%;
+  }
+  .message-wrapper.bot {
+    width: 90%;
+  }
+  .message.bot-message {
+    max-width: 100%;
   }
 }

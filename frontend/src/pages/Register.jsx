@@ -2,8 +2,9 @@ import axios from "axios";
 import { useForm, FormProvider } from "react-hook-form";
 import FormInput from "../components/FormInput";
 import { Link, useNavigate } from "react-router-dom";
-import "../styles/auth.css";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
+import "../styles/auth.css";
 
 const Register = () => {
   const methods = useForm();
@@ -25,6 +26,7 @@ const Register = () => {
       )
       .then((res) => {
         toast.success("User registered successfully! 🎉", { theme: "dark" });
+        Cookies.set("user", JSON.stringify(res.data.user.fullName));
         navigate("/");
         console.log("User created successfully.");
       })

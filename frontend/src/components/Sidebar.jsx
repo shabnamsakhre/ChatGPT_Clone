@@ -1,11 +1,10 @@
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react"; // icons
-import "../styles/chats/sidebar.css";
 import Cookies from "js-cookie";
-
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import "../styles/chats/sidebar.css";
 
 const Sidebar = ({
   chats,
@@ -17,7 +16,7 @@ const Sidebar = ({
   const [isOpen, setIsOpen] = useState(false);
   const [token, setToken] = useState(null);
   const navigate = useNavigate();
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(null);
 
   // Ask for chat title when creating new chat
   const createNewChat = async () => {
@@ -44,7 +43,21 @@ const Sidebar = ({
   // Close sidebar when pressing ESC
   useEffect(() => {
     setToken(Cookies.get("token"));
-    setUser(JSON.parse(Cookies.get("user")));
+
+    const storedUser = Cookies.get("user");
+
+    console.log(storedUser);
+
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (err) {
+        console.error("Failed to parse user cookie:", err);
+        setUser(""); // fallback
+      }
+    } else {
+      setUser("");
+    }
 
     const handleEsc = (e) => {
       if (e.key === "Escape") setIsOpen(false);
@@ -54,8 +67,6 @@ const Sidebar = ({
   }, [token]);
 
   const handleLogout = async () => {
-    console.log("Hello");
-
     const response = await axios.get("http://localhost:3000/api/auth/logout");
 
     if (response.status === 200) {
@@ -90,9 +101,9 @@ const Sidebar = ({
         {/* Close button (visible on mobile when open) */}
         <div className="sidebar-top">
           <button
-            className={`sidebar-btn newChat-button button ${
-              !token ? "disabled" : ""
-            }`}
+            className={`sidebar-btn 
+              ${!token ? "disabled" : ""} 
+              ${user ? "newChat-button button" : "padding-btn"}`}
             disabled={!token}
             onClick={createNewChat}
           >
@@ -133,7 +144,7 @@ const Sidebar = ({
           )}
         </div>
 
-        <div className="sidebar-footer">
+        <div className={`sidebar-footer ${user ? "footer-gradient" : ""}`}>
           {token ? (
             <div className="profile-section">
               <div className="profile">

@@ -25,7 +25,6 @@
 }
 
 /* Close button (mobile only) */
-/* Close button (mobile only) */
 .close-btn {
   width: 36px;
   height: 36px;
@@ -60,7 +59,7 @@
   width: 75%;
   background: var(--primary-color);
   color: white;
-  padding: 1.5px !important;
+  padding: 1.5px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -77,6 +76,10 @@
   color: #888;
   cursor: not-allowed;
   transform: none;
+}
+
+.padding-btn {
+  padding: 0.8rem 0;
 }
 
 .sidebar-chats {
@@ -105,11 +108,14 @@
 
 .sidebar-footer {
   /* background-color: var(--background-gray); */
-  background: var(--gradient-color);
   border-top-left-radius: 0.7rem;
   border-top-right-radius: 0.7rem;
   /* overflow: hidden; */
   padding: 2px 2px 0 2px;
+}
+
+.footer-gradient {
+  background: var(--gradient-color);
 }
 
 .profile-section {

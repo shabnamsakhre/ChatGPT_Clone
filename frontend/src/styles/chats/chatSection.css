@@ -58,5 +58,12 @@
 }
 
 @media (max-width: 768px) {
-  
+  .chat-section {
+    width: 100%;
+    height: 100%;
+  }
+
+  .messages {
+    padding: 3rem 1rem 1rem 1rem;
+  }
 }
