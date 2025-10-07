@@ -13,7 +13,7 @@ const Register = () => {
   const onSubmit = (data) => {
     axios
       .post(
-        "http://localhost:3000/api/auth/register",
+        "https://chatgpt-clone-cpl7.onrender.com/api/auth/register",
         {
           fullName: {
             firstName: data.firstName,

@@ -47,7 +47,9 @@ const ChatSection = ({ activeChat, messageBox, setMessageBox }) => {
 
   // socket setup (unchanged logic)
   useEffect(() => {
-    const tempSocket = io("http://localhost:3000", { withCredentials: true });
+    const tempSocket = io("https://chatgpt-clone-cpl7.onrender.com", {
+      withCredentials: true,
+    });
 
     tempSocket.on("ai-response", (messagePayload) => {
       console.log("Received - ", messagePayload);

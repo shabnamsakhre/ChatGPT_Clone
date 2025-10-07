@@ -12,7 +12,9 @@ const Home = () => {
   // Default chat
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/chat", { withCredentials: true })
+      .get("https://chatgpt-clone-cpl7.onrender.com/api/chat", {
+        withCredentials: true,
+      })
       .then((response) => {
         setChats(response.data.chats.reverse());
       });
@@ -28,7 +30,7 @@ const Home = () => {
 
   const getMessages = async (chatId) => {
     const response = await axios.get(
-      `http://localhost:3000/api/chat/messages/${chatId}`,
+      `https://chatgpt-clone-cpl7.onrender.com/api/chat/messages/${chatId}`,
       { withCredentials: true }
     );
 

@@ -24,7 +24,7 @@ const Sidebar = ({
 
     if (title && title.trim() !== "") {
       const response = await axios.post(
-        "http://localhost:3000/api/chat",
+        "https://chatgpt-clone-cpl7.onrender.com/api/chat",
         { title },
         { withCredentials: true }
       );
@@ -67,7 +67,9 @@ const Sidebar = ({
   }, [token]);
 
   const handleLogout = async () => {
-    const response = await axios.get("http://localhost:3000/api/auth/logout");
+    const response = await axios.get(
+      "https://chatgpt-clone-cpl7.onrender.com/api/auth/logout"
+    );
 
     if (response.status === 200) {
       toast.success(response.data.message, { theme: "dark" });
